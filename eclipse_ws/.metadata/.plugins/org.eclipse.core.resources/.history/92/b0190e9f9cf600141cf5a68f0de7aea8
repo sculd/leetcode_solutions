@@ -1,0 +1,27 @@
+class Coordinate {
+	double x, y, z;
+}
+
+class Solution {
+	//Given 3 coordinates each with dimensions in x, y and z, tell us if the balcony is
+    //perpendicular to the tower.
+    //
+    //A Coordinate is an object that simply stores an x, y and z coordinate. All doubles.
+    //
+    //The vector formed between co1 and co2 represents the tower, the vector
+    //formed between the midpoint of the tower and co3 represents the balcony.
+	public boolean checkBalconyBeam(Coordinate co1, Coordinate co2, Coordinate co3) {
+		//Please implement this
+	    return false;
+	}	
+}
+
+public class LeaningBalconiesOfPisa {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Solution sol = new Solution();
+		sol.checkBalconyBeam(co1, co2, co3);
+	}
+
+}

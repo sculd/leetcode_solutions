@@ -1,0 +1,17 @@
+class Solution {
+	
+}
+
+public class RateOfReturnOnBond {
+	/*
+	 * The US government offers to sell you a $100, zero coupon treasury bond at 95.50. 
+	 * The bond will come to maturity in 153 days. 
+	 * Write a program that calculates rate of return on a $100 treasury bond 
+	 * given its current price and days to maturity.
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

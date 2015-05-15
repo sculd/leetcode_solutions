@@ -1,0 +1,50 @@
+import java.util.*;
+
+class Solution	{
+	/*
+	 * Bus tickets are numbered with a 6 digits number from 000000 to 999999. 
+	 * Write a program that counts number of all 'lucky' bus tickets. 
+	 * A Ticket is considered to be 'lucky' 
+	 * if the sum of the first 3 digit equals the sum of last 3 digits.
+	 */
+	
+	//Note that there is no input. Just return the number of lucky numbers.
+	public int getNumberOfLuckyBusTickets()	{
+	    //Please implement this
+		
+		// 000 to 999
+		// 000, 001, 002, ..., 100, ..., 998, 999 => 1000 numbers
+		// possible sums of the three digits: 0 to 27
+		
+		Map<Integer, Integer> num_possibilities = new HashMap<Integer, Integer>();
+		for (int three_digit = 0; three_digit <= 999; three_digit++)	{
+			int three_sum = 0;
+			
+			int val = three_digit;
+			three_sum += val % 10; // 1 digit
+			val /= 10;
+			three_sum += val % 10; // 10 digit
+			val /= 10;
+			three_sum += val % 10; // 100 digit
+			
+			int pos = 0;
+			Integer num_possibility = num_possibilities.get(three_sum);
+			if (num_possibility != null)
+				pos = num_possibility;
+			
+			int new_pos = pos + 1; 
+			num_possibilities.set(three_sum, int );
+		}
+		
+	    return 0;
+	}
+}
+
+public class ImFeelingLucky {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

@@ -1,0 +1,77 @@
+import java.util.*;
+
+class Solution {
+	//Take a number and return its string(check-written) form.
+	String[] oneDigitSymbols = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+
+	String[] towDigitsLeadingSymbols = {"", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eightty", "ninety"};
+
+	static final Map<Integer, String> twoDigitSymbols = new HashMap<Integer, String>() {{
+	    put(10, "ten");
+	    put(11, "eleven");
+	    put(12, "twelve");
+	    put(13, "thirteen");
+	    put(14, "fourteen");
+	    put(15, "fifteen");
+	    put(16, "sixteen");
+	    put(17, "seventeen");
+	    put(18, "eighteen");
+	    put(19, "nineteen");
+	}};	
+
+	String convertTwoDigits(int two_digits)	{
+		return "";
+	}
+
+	String convertThreeDigits(int three_digits)	{
+		int h_digit = three_digits / 100;
+		int two_digits = three_digits % 100;
+		String two_digits_word = convertTwoDigits(two_digits);
+		String result = "";
+		oneDigitSymbols[h_digit] + " hundread" + ((h_digit == 1)? "" : "s");
+		if (h_digit != 0)
+			result = result + two_digits_word;
+		return "";
+	}
+	
+	public String convertToWords(int number) {
+	    //Implement this, return a string.
+		// billion, thousand, hundred
+		
+		String result = "";
+		
+		int b_digit = number / 1000000000;
+		number = number % 1000000000;
+		result = result + ((b_digit == 0)? "" : convertThreeDigits(b_digit) + " billion");
+		
+		int m_digit = number / 1000000;
+		number = number % 1000000;
+		result = result + ((result.length() == 0)? "": " ") + ((m_digit == 0)? "" : convertThreeDigits(m_digit) + " million");
+		
+		int t_digit = number / 1000;
+		number = number % 1000;
+		result = result + ((result.length() == 0)? "": " ") + ((t_digit == 0)? "" : convertThreeDigits(t_digit ) + " thousand");
+
+		result = result + ((result.length() == 0)? "": " ") + ((number == 0)? "zero" : convertThreeDigits(number));
+		
+	    return result;
+	}	
+}
+
+public class CheckWriter {
+	/*
+	 * Write a program that converts a number to a print form (like check writer) 
+	 * Example: input: 561 => output: Five Hundred Sixty One 
+	 * input: 12340982 => Output: Twelve million three hundred forty thousand nine hundred eighty two
+	 */
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Solution sol = new Solution();
+		
+		System.out.println(sol.convertToWords(123));
+		System.out.println(sol.convertToWords(561));
+		System.out.println(sol.convertToWords(12340982));
+	}
+
+}

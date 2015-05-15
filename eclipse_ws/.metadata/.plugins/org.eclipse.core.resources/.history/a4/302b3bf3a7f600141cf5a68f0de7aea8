@@ -1,0 +1,204 @@
+enum Direction {
+    EAST, WEST, SOUTH, NORTH, UP, DOWN;
+}
+
+class Solution {
+	int amountOfTime;
+	Direction[] directions;
+	boolean isPossible;
+}
+
+class Solve {
+	/*Given a grid, return a solution object.
+    *
+    * A solution object is a struct that contains the following.
+    * = amountOfTime == an int stating how much time it took to complete the maze.
+    * = directions == an array of Directions that dictates the path through the maze.
+    * = isPossible == a boolean that says *if* there is a path through the maze.
+    *
+    * A Direction is an enum with six states {Direction.EAST, Direction.WEST, Direction.SOUTH,
+    * Direction.NORTH, Direction.UP, Direction.DOWN}
+    */
+	void updateFloor(char[][][] grid, int h, int m, int n, int f, Direction[][][] directions, long[][][] dists)	{
+		// repeat updating the floor until no change is made
+		int num_update = 0;
+		while (true)	{
+			// construct the dists, directions from the bottom to the top
+			for (int r = m - 1; r >= 0; r--)	{
+				for (int c = n - 1; c >= 0; c--)	{
+					// for each area
+					// declare long in case of the int overflow 
+					//long dist = Integer.MAX_VALUE + 1;
+					long dist = dists[f][r][c];
+					Direction dir = Direction.SOUTH;
+					
+					char area = grid[f][r][c];
+					if (area == '2')	
+						// if princess found
+						dists[f][r][c] = 0;
+					else if (area == 'o')	
+						// if a column
+						;
+					else if (f < h-1 && grid[f+1][r][c] != 'o')	{
+						// it the area is not at the bottom floor and the floor below is not a column
+						long temp_dist = (long)1 + dists[f+1][r][c];
+						dist = Math.min(dist, temp_dist);
+						if (dist == temp_dist)
+							dir = Direction.DOWN;
+					} 
+					
+					// it the area is not at the edge of the floor and the neighbor is not a column
+					else if (r < m-1 && grid[f][r+1][c] != 'o')	{
+						long temp_dist = (long)1 + dists[f][r+1][c];
+						dist = Math.min(dist, temp_dist);
+						if (dist == temp_dist)
+							dir = Direction.EAST;
+					}
+					else if (r > 0 && grid[f][r-1][c] != 'o')	{
+						long temp_dist = (long)1 + dists[f][r-1][c];
+						dist = Math.min(dist, temp_dist);
+						if (dist == temp_dist)
+							dir = Direction.WEST;
+					}
+					else if (c < n-1 && grid[f][r][c+1] != 'o')	{
+						long temp_dist = (long)1 + dists[f][r][c+1];
+						dist = Math.min(dist, temp_dist);
+						if (dist == temp_dist)
+							dir = Direction.SOUTH;
+					}
+					else if (c > 0 && grid[f][r][c-1] != 'o')	{
+						long temp_dist = (long)1 + dists[f][r][c-1];
+						dist = Math.min(dist, temp_dist);
+						if (dist == temp_dist)
+							dir = Direction.NORTH;
+					}
+					
+					if (dist < dists[f][r][c])
+						num_update += 1;
+					
+					dists[f][r][c] = dist;
+				}
+			}	
+			if (num_update == 0)
+				break;
+		}
+	}
+	
+	public Solution savePrincess(char[][][] grid) {
+	    //Please implement this, it only returns an empty solution object.
+	    Solution sn_can_not = new Solution();
+	    sn_can_not.amountOfTime = 0;
+	    sn_can_not.isPossible = false;
+		
+	    // in case of the unexplorable tower
+		int h = grid.length;
+		if (h == 0)
+			return sn_can_not;
+		int m = grid[0].length;
+		if (m == 0)
+			return sn_can_not;
+		int n = grid[0][0].length;
+		if (n == 0)
+			return sn_can_not;
+		
+		Direction[][][] directions = new Direction[h][m][n];
+		long[][][] dists = new long[h][m][n];
+
+		// initialize
+		for (int f = h - 1; f >= 0; f--)	{
+			for (int r = m - 1; r >= 0; r--)	{
+				for (int c = n - 1; c >= 0; c--)	{
+					dists[f][r][c] = (long)Integer.MAX_VALUE + 1;
+				}
+			}
+		}
+
+		// construct the dists, directions from the bottom to the top
+		for (int f = h - 1; f >= 0; f--)	{
+			updateFloor(grid, h, m, n, f, directions, dists);
+		}
+
+	    Solution sn = new Solution();
+	    sn.amountOfTime = 0;
+	    sn.isPossible = true;
+	    
+		// look for the prince on the top floor
+		for (int r = m - 1; r >= 0; r--)	{
+			for (int c = n - 1; c >= 0; c--)	{
+				if (grid[0][r][c] == '1')	{
+					// prince can not find a way to the princess
+					if (dists[0][r][c] == (long)Integer.MAX_VALUE + 1)	{
+						return sn_can_not;
+					}
+					
+					int dist = (int)(dists[0][r][c]);
+					sn.amountOfTime = dist * 5;
+					sn.directions = new Direction[dist];
+					int i = 0, j = r, k = c;
+					for (int s = 0; s < dist; s++)	{
+						sn.directions[s] = directions[i][j][k];
+						
+						if (directions[i][j][k] == Direction.EAST)
+							j += 1;
+						else if (directions[i][j][k] == Direction.WEST)
+							j -= 1;
+						else if (directions[i][j][k] == Direction.NORTH)
+							k -= 1;
+						else if (directions[i][j][k] == Direction.SOUTH)
+							k += 1;
+						else if (directions[i][j][k] == Direction.DOWN)
+							i += 1;
+					}
+					
+					//(int)(dists[0][r][c]);
+					break;
+				}
+			}
+		}
+		
+		return sn;
+	}	
+}
+
+public class TheLabyrinth {
+	/*
+	 * The Prince of Persia has been thrown onto the top level of Jaffar's underground labyrinth. 
+	 * The labyrinth consists of h levels strictly on top of each other. 
+	 * Each level is split into m by n areas. 
+	 * Some areas have columns that support ceiling, some areas are free. 
+	 * The Prince can move only to free areas. 
+	 * To move to the level below the Prince can break the floor underneath him and jump down 
+	 * if there is no column underneath. Every move takes the Prince 5 seconds. 
+	 * A Princess is waiting for the Prince at the lowest level. 
+	 * Write a program that will help the Prince to save the Princess 
+	 * as fast as possible by finding the shortest path between them and outputting time 
+	 * it took the Prince to find the Princess. The structure of the labyrinth is given bellow. 
+	 * The Prince’s location is marked with '1', the Princess’s location is marked with '2'. 
+	 * ‘.’ - marks a free spot and ‘o’ marks a column.
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Solve solve = new Solve();
+		char[][][] grid = {
+						{{'1', '.', '.'},
+						 {'o', 'o', '.'},
+						 {'.', '.', '.'}}, 
+						{{'o', 'o', 'o'},
+					     {'.', '.', 'o'},
+					     {'.', 'o', 'o'}}, 
+						{{'o', 'o', 'o'},
+					     {'o', '.', '.'},
+					     {'o', '.', '2'}}
+					    }; 
+		Solution solution = solve.savePrincess(grid);
+		System.out.println(solution.isPossible);
+		System.out.println(solution.amountOfTime);
+		if (solution.isPossible){
+			for (int i = 0; i < solution.amountOfTime/5; i++)	{
+				System.out.println(solution.directions[i]);
+			}
+		}
+		
+	}
+
+}
