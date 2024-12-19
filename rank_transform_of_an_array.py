@@ -2,6 +2,10 @@ from typing import List
 
 
 class Solution:
+    def arrayRankTransform2(self, arr: List[int]) -> List[int]:
+        ranks = {v: i for i, v in enumerate(sorted(set(arr)))}
+        return [ranks[v] + 1 for v in arr]
+
     def arrayRankTransform(self, arr: List[int]) -> List[int]:
         ordered = sorted([(v, i) for i, v in enumerate(arr)])
         ret = [0 for _ in range(len(arr))]
