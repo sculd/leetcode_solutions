@@ -57,6 +57,33 @@ class Solution:
         return longest
 
 
+class Solution:
+    def longestPath(self, parent: List[int], s: str) -> int:
+        children = defaultdict(list)
+        for c, p in enumerate(parent):
+            children[p].append(c)
+
+        longest = 0
+        longest_ending_at = defaultdict(int)
+
+        def visit(node):
+            nonlocal longest, longest_ending_at
+            if not children[node]:
+                longest = max(longest, 1)
+                longest_ending_at[node] = 1
+                return
+
+            for c in children[node]:
+                visit(c)
+
+            cs = sorted([longest_ending_at[c] for c in children[node] if s[c] != s[node]])
+
+            longest_ending_at[node] = sum(cs[-1:]) + 1
+            longest = max(longest, sum(cs[-2:]) + 1)
+
+        visit(0)
+        return longest
+    
 
 sol = Solution()
 
